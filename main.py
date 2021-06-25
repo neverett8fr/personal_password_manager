@@ -24,9 +24,13 @@ def create_account():
     username = input("Enter a username: ")
     password = bcrypt.hashpw(bytes(input("Enter a password: "), 'utf-8'), bcrypt.gensalt(12))
 
-    file = open("password_manager_accounts.csv", "a")
-    file.write(username + "," + password.decode('utf-8') + "\n")
-    file.close()
+    try:
+        file = open("password_manager_accounts.csv", "a")
+        file.write(username + "," + password.decode('utf-8') + "\n")
+        file.close()
+        return "Account Created"
+    except:
+        return "Account Not Created"
 
 def get_hashed_pass(username):
     with open("password_manager_accounts.csv", newline='') as csvfile:
@@ -96,10 +100,11 @@ def create_password():
         file.write(username + "," + email + "," + websiteURL + "," + encrypted_pass + "\n")
         file.close()
 
-        print("Password: " + result_str)
+        return "Password: " + result_str
 
     else:
         print("Login details incorrect")
+        return "N/A"
 
 
 def get_encrypted_website_pass(username, website):
@@ -118,18 +123,22 @@ def retrieve_password():
     if check_login(username, master_password_plaintext):
         websiteURL = input("Enter the website URL: ")
         email, encrypted_password = get_encrypted_website_pass(username, websiteURL)
-        print("Email: " + email)
-        print("Password: " + decrypt_blowfish(encrypted_password, master_password_plaintext))
+        return "Email: " + email + "\n" + "Password: " + decrypt_blowfish(encrypted_password, master_password_plaintext)
+
     else:
         print("Login details incorrect")
+        return "N/A"
 
 
 choice = ""
 while choice != "9":
     choice = input("Retrieve password (1), Create password (2), Create account (3), Quit (9): ")
     if choice == "1":
-        retrieve_password()
+        print()
+        print(retrieve_password() + "\n")
     elif choice == "2":
-        create_password()
+        print()
+        print(create_password() + "\n")
     elif choice == "3":
-        create_account()
+        print()
+        print(create_account() + "\n")
