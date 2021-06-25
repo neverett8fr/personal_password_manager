@@ -89,7 +89,7 @@ def create_password():
         email = input("Enter the email you'll use: ")
         websiteURL = input("Enter the website URL: ")
 
-        letters = string.ascii_lowercase + string.digits + string.punctuation
+        letters = string.ascii_lowercase + string.digits + string.punctuation + string.ascii_uppercase
         result_str = ''.join(random.choice(letters) for i in range(32))
 
         result_str = return_multiple_of_eight(result_str)  # makes it a multiple of 8 so encryption doesn't break
