@@ -4,6 +4,7 @@ import csv
 import blowfish
 import random
 import string
+import codecs
 
 # This can just return true / false, I wouldn't normally do this, but no personal information will be leaked
 # If it returns true where passwords don't actually match, the decryption of passwords will be done wrong so return false results.
@@ -78,13 +79,17 @@ def encrypt_blowfish(input, key):
     data = input.encode('utf-8')
     data_encrypted = b"".join(cipher.encrypt_ecb(data))
 
-    return data_encrypted
+    # return a hex value, that hex can be written to file then converted
+
+    return data_encrypted.hex()
 
 def decrypt_blowfish(input, key):
     data_decrypted = ""
 
+    byte_input = bytes.fromhex(input)
+
     cipher = blowfish.Cipher(key.encode('utf-8'))
-    data_decrypted = b"".join(cipher.decrypt_ecb(input))
+    data_decrypted = b"".join(cipher.decrypt_ecb(byte_input))
 
     return data_decrypted.decode('utf-8')
 
@@ -100,13 +105,13 @@ def create_password():
         letters = string.ascii_lowercase + string.digits + string.punctuation
         result_str = ''.join(random.choice(letters) for i in range(32))
 
-        encrypted_pass = str(encrypt_blowfish(result_str, master_password_plaintext))
+        encrypted_pass = encrypt_blowfish(result_str, master_password_plaintext)
 
-        file = open("password_manager_passwords.csv", "a")
+        file = open("password_manager_passwords.csv", "a", encoding='utf-8')
         file.write(username + "," + email + "," + websiteURL + "," + encrypted_pass + "\n")
         file.close()
 
-        print(result_str)
+        print("Password: " + result_str)
 
     else:
         print("Login details incorrect")
@@ -128,8 +133,8 @@ def retrieve_password():
     if check_login(username, master_password_plaintext):
         websiteURL = input("Enter the website URL: ")
         email, encrypted_password = get_encrypted_website_pass(username, websiteURL)
-        print(email)
-        print(decrypt_blowfish(encrypted_password, master_password_plaintext))
+        print("Email: " + email)
+        print("Password: " + decrypt_blowfish(encrypted_password, master_password_plaintext))
     else:
         print("Login details incorrect")
 
