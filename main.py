@@ -28,10 +28,6 @@ def create_account():
     file.write(username + "," + password.decode('utf-8') + "\n")
     file.close()
 
-    #out = bcrypt.hashpw(b"hello", bcrypt.gensalt(12))
-    #if bcrypt.hashpw(b"hello", out) == out:
-    #    print("Matchd")
-
 def get_hashed_pass(username):
     with open("password_manager_accounts.csv", newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
@@ -40,16 +36,6 @@ def get_hashed_pass(username):
                 return row[1].encode('utf-8')
 
     return ""
-
-#cipher = blowfish.Cipher(b"passwordKey")
-#block = b"textof8c"
-#ciphertext = cipher.encrypt_block(block)
-#plaintext = cipher.decrypt_block(ciphertext)
-
-
-#data = b"hhhhhhhhggggggggjjjjjjjjuuuuuuuu"
-#data_encrypted = b"".join(cipher.encrypt_ecb(data))
-#data_decrypted = b"".join(cipher.decrypt_ecb(data_encrypted))
 
 
 def return_multiple_of_eight(input):
@@ -61,8 +47,7 @@ def return_multiple_of_eight(input):
     else:
         len_difference = 8 - (len(input)%8)
 
-    # print(len_difference)
-    # add on num of chars for len of difference "x"
+    # add on num of chars for len of difference "x" - this function is a bit messy, shouldn't need to use it much though, only for future work
 
     for i in range(len_difference):
         input += "x"
@@ -74,7 +59,6 @@ def encrypt_blowfish(input, key):
     data_encrypted = ""
 
     cipher = blowfish.Cipher(key.encode('utf-8'))
-    input = return_multiple_of_eight(input)
     data = input.encode('utf-8')
     data_encrypted = b"".join(cipher.encrypt_ecb(data))
 
@@ -103,6 +87,8 @@ def create_password():
 
         letters = string.ascii_lowercase + string.digits + string.punctuation
         result_str = ''.join(random.choice(letters) for i in range(32))
+
+        result_str = return_multiple_of_eight(result_str)  # makes it a multiple of 8 so encryption doesn't break
 
         encrypted_pass = encrypt_blowfish(result_str, master_password_plaintext)
 
