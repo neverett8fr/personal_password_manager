@@ -4,7 +4,6 @@ import csv
 import blowfish
 import random
 import string
-import codecs
 
 # This can just return true / false, I wouldn't normally do this, but no personal information will be leaked
 # If it returns true where passwords don't actually match, the decryption of passwords will be done wrong so return false results.
