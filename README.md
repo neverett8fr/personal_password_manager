@@ -11,7 +11,7 @@ Create a password for an account - this requires you to log in, where the hash i
 Retrieve password for an account - this requires you to log in, the hash is checked, then asks you for the website you want details for. The application returns the email you used, as well as the password created (decrypted using your master password)  
   
 ## Notes  
-- The data is stored in CSV file to prevent having to set up SQL DB, etc.  
+- The data is stored in CSV file to prevent users from having to set up SQL DB, etc.  
 - This won't be the most secure one out there.  
 - - it'll be stored on a users computer so data won't need to be as secure as otherwise.  
 - Master password hashed using BCrypt  
